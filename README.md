@@ -1,5 +1,5 @@
 ## Inventory Track
-(![Dashboard do Inventory Track mostrando métricas de estoque, valor total e gráfico semana](public/invetory-track.png))
+![Dashboard do Inventory Track mostrando métricas de estoque, valor total e gráfico semana]()
 
 ### Visão Geral
 Aplicação de controle de inventário construída com Next.js (App Router) que permite cadastrar, listar e monitorar produtos, com indicadores de estoque, valor total e gráficos de evolução semanal. O acesso é protegido por autenticação via Stack.
