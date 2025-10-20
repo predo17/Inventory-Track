@@ -46,7 +46,7 @@ function main() {
                 case 0:
                     demoUserId = "022c1e9c-1b87-4e49-a706-b67beb8cbd94";
                     return [4 /*yield*/, prisma.product.createMany({
-                            data: Array.from({ length: 25 }).map(function (_, i) { return ({
+                            data: Array.from({ length: 20 }).map(function (_, i) { return ({
                                 userId: demoUserId,
                                 name: "Product ".concat(i + 1),
                                 price: (Math.random() * 90 + 10).toFixed(2),

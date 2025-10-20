@@ -19,12 +19,7 @@ export default async function AddProductPage() {
                     </div>
                 </div>
                 <div className="max-w-2xl">
-                    <div className="relative bg-gray-50 rounded-lg border border-gray-200 p-6 shadow-md">
-                        <div className="absolute top-0 right-0 p-1.5">
-                            <picture>
-                                <img src="/favicon-icon.png" alt="Logo do Desenvolvedor" className="w-10 h-10" />
-                            </picture>
-                        </div>
+                    <div className="bg-gray-50 rounded-lg border border-gray-200 p-6 shadow-md">
                         <form action={createProduct} className="space-y-6">
                             <div>
                                 <label
@@ -72,7 +67,7 @@ export default async function AddProductPage() {
                                         id="quantity"
                                         type="number"
                                         name="quantity"
-                                        min="0" // deixei assim para testa
+                                        min="0" // Deixei assim para testar.
                                         max="1.000.000.000"
                                         placeholder="Insira a quantidade desejada."
                                         required

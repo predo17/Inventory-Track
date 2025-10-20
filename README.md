@@ -1,5 +1,5 @@
 ## Inventory Track
-![Dashboard do Inventory Track mostrando métricas de estoque, valor total e gráfico semana]()
+![Dashboard do Inventory Track mostrando métricas de estoque, valor total e gráfico semana](./public/invetory-track.png)
 
 ### Visão Geral
 Aplicação de controle de inventário construída com Next.js (App Router) que permite cadastrar, listar e monitorar produtos, com indicadores de estoque, valor total e gráficos de evolução semanal. O acesso é protegido por autenticação via Stack.
@@ -9,7 +9,7 @@ Aplicação de controle de inventário construída com Next.js (App Router) que 
 - **Dashboard**: métricas agregadas (total de produtos, valor total, alerta de estoque baixo), gráfico semanal e níveis de estoque recentes.
 - **Inventário**: listagem paginada, busca por nome, exclusão de itens.
 - **Adicionar produto**: criação de produtos com validação server-side.
-- **Sistema (Settings)**: espaço para configurações futuras.
+- **Sistema**: configurações do Stack.
 
 ### Stack Tecnológica
 - **Next.js 15 (App Router)** com React 19
@@ -69,19 +69,6 @@ model Product {
 - `lib/auth.ts` expõe `getCurrentUser()` que consulta o Stack no server e faz `redirect("/sign-in")` se não houver usuário.
 - Páginas server-side (e Server Actions) usam `getCurrentUser()` para garantir escopo por `userId`.
 
-### Páginas e Fluxos Principais
-- `app/dashboard/page.tsx`
-  - Busca: contagem total de produtos do usuário, soma de valor (price × quantity), contagem por status de estoque e série semanal de criações.
-  - Exibe cards de métricas, gráfico semanal (`products-chart.tsx`) e lista de níveis de estoque dos itens mais recentes.
-- `app/inventory/page.tsx`
-  - Aceita query `q` (busca por nome) e `page` (pagina resultados, 10 por página).
-  - Lista: nome, SKU, preço, quantidade, `lowStockAt` e ações (excluir via `DeleteButton`).
-  - Mostra estados vazios distintos: sem resultados de busca vs. estoque vazio.
-- `app/add-product/page.tsx`
-  - Formulário que envia para a Server Action `createProduct` com validação `zod`.
-- `app/settings/page.tsx`
-  - Placeholder para futuras configurações.
-
 ### Fluxo de Dados e Estado
 - Páginas são Server Components que consultam o banco via `prisma` (singleton de `lib/prisma.ts`).
 - Server Actions em `lib/actions/products.tsx`:
@@ -97,12 +84,6 @@ model Product {
   - Se não definido: usa limiar padrão (ex.: destaque informativo e regras de cor no dashboard).
 - **Valor total**: soma de `price × quantity` para todos os produtos do usuário.
 - **Série semanal**: janela de 12 semanas, agrupando criações por semana com `date-fns`.
-
-### Componentes
-- `Sidebar.tsx`: navegação com realce de rota atual e `UserButton` do Stack.
-- `products-chart.tsx`: `AreaChart` com `ResponsiveContainer`, tooltip estilizado e eixos simples.
-- `DeleteButton.tsx`: encapsula envio de `id` para `deleteProduct`.
-- `pagination.tsx`: cria links de navegação considerando `q`, `pageSize` e página atual.
 
 ### Notas de Performance e Segurança
 - **Prisma Client singleton** evita múltiplas conexões em dev (`lib/prisma.ts`).
