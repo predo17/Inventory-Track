@@ -1,26 +1,77 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+body {
+  cursor: default;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.grid-layout {
+  display: grid;
+  grid-template-columns: 0.56fr 1.2fr;
+  grid-template-rows: auto auto;
+  /* Mudei para auto para ser mais flexível */
+  gap: 1.5rem;
+  align-items: start;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.metrica {
+  /* Corrigi o nome da classe - estava 'metricas' no CSS */
+  grid-column: 1 / 2;
+  grid-row: 1 / 3;
+}
+
+.semana {
+  grid-column: 2 / 3;
+  /* Corrigi para 2/3 */
+  grid-row: 1 / 2;
+}
+
+.niveis {
+  grid-column: 2 / 2;
+  /* Corrigi para 2/3 */
+  grid-row: 2 / 4;
+}
+
+.eficiencia {
+  grid-column: 1 / 1;
+  grid-row: 3 / 4;
+}
+
+/* Animação das bolinhas do Níveis de estoque quando não há produtos cadastrados */
+.dot-combo {
+  animation: pulse-float 3s infinite ease-in-out;
+}
+
+.dot-combo:nth-child(1) { animation-delay: 0s; }
+.dot-combo:nth-child(2) { animation-delay: 0.4s; }
+.dot-combo:nth-child(3) { animation-delay: 0.8s; }
+
+@keyframes pulse-float {
+  0%, 100% { 
+    transform: scale(1) translateY(0);
+  }
+  25% { 
+    transform: scale(1.1) translateY(-3px);
+  }
+  50% { 
+    transform: scale(1.05) translateY(-2px);
+  }
+  75% { 
+    transform: scale(1.1) translateY(-3px);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
 }

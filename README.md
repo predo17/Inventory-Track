@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Inventory Track
+(![Dashboard do Inventory Track mostrando métricas de estoque, valor total e gráfico semana](public/invetory-track.png))
 
-## Getting Started
+### Visão Geral
+Aplicação de controle de inventário construída com Next.js (App Router) que permite cadastrar, listar e monitorar produtos, com indicadores de estoque, valor total e gráficos de evolução semanal. O acesso é protegido por autenticação via Stack.
 
-First, run the development server:
+### Funcionalidades
+- **Autenticação**: redireciona para `sign-in` quando o usuário não está autenticado.
+- **Dashboard**: métricas agregadas (total de produtos, valor total, alerta de estoque baixo), gráfico semanal e níveis de estoque recentes.
+- **Inventário**: listagem paginada, busca por nome, exclusão de itens.
+- **Adicionar produto**: criação de produtos com validação server-side.
+- **Sistema (Settings)**: espaço para configurações futuras.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Stack Tecnológica
+- **Next.js 15 (App Router)** com React 19
+- **Prisma** (`@prisma/client`) para acesso a banco PostgreSQL
+- **Stack** (`@stackframe/stack`) para autenticação (server/client)
+- **Zod** para validação em Server Actions
+- **Recharts** para gráficos
+- **Tailwind CSS v4** para estilos
+
+### Visão de Arquitetura e Pastas
+Estrutura principal (resumo):
+
+```
+app/
+  dashboard/page.tsx         # Página principal com métricas e gráficos
+  inventory/page.tsx         # Listagem, busca e paginação de produtos
+  add-product/page.tsx       # Formulário de criação de produto
+  settings/page.tsx          # Configurações do sistema (futuro)
+  layout.tsx                 # Layout raiz com StackProvider/Theme
+components/
+  Sidebar.tsx                # Navegação lateral
+  products-chart.tsx         # Gráfico semanal (Recharts)
+  DeleteButton.tsx           # Botão de exclusão de produto
+  pagination.tsx             # Componente de paginação
+lib/
+  prisma.ts                  # Singleton do PrismaClient
+  auth.ts                    # `getCurrentUser()` (redirect se não logado)
+  actions/products.tsx       # Server Actions: criar e deletar produtos
+prisma/
+  schema.prisma              # Modelo `Product`
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Modelo de Dados (Prisma)
+Entidade principal: `Product`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```prisma
+model Product {
+  id         String   @id @default(cuid())
+  userId     String
+  name       String
+  sku        String?  @unique
+  price      Decimal  @db.Decimal(12,2)
+  quantity   Int      @default(0)
+  lowStockAt Int?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+  @@index([userId, name])
+  @@index([createdAt])
+}
+```
 
-## Learn More
+- **price** representa o valor unitário (duas casas decimais).
+- **lowStockAt** define o nível mínimo desejado. Produtos com `quantity <= lowStockAt` entram como “estoque baixo”.
 
-To learn more about Next.js, take a look at the following resources:
+### Autenticação e Acesso
+- `lib/auth.ts` expõe `getCurrentUser()` que consulta o Stack no server e faz `redirect("/sign-in")` se não houver usuário.
+- Páginas server-side (e Server Actions) usam `getCurrentUser()` para garantir escopo por `userId`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Páginas e Fluxos Principais
+- `app/dashboard/page.tsx`
+  - Busca: contagem total de produtos do usuário, soma de valor (price × quantity), contagem por status de estoque e série semanal de criações.
+  - Exibe cards de métricas, gráfico semanal (`products-chart.tsx`) e lista de níveis de estoque dos itens mais recentes.
+- `app/inventory/page.tsx`
+  - Aceita query `q` (busca por nome) e `page` (pagina resultados, 10 por página).
+  - Lista: nome, SKU, preço, quantidade, `lowStockAt` e ações (excluir via `DeleteButton`).
+  - Mostra estados vazios distintos: sem resultados de busca vs. estoque vazio.
+- `app/add-product/page.tsx`
+  - Formulário que envia para a Server Action `createProduct` com validação `zod`.
+- `app/settings/page.tsx`
+  - Placeholder para futuras configurações.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Fluxo de Dados e Estado
+- Páginas são Server Components que consultam o banco via `prisma` (singleton de `lib/prisma.ts`).
+- Server Actions em `lib/actions/products.tsx`:
+  - `createProduct(formData)`: valida com `zod`, cria com `userId` do usuário atual e redireciona para `/inventory`.
+  - `deleteProduct(formData)`: exclui respeitando `id` e `userId`.
+- O gráfico semanal (`components/products-chart.tsx`) recebe dados já agregados no server e renderiza via Recharts no client.
 
-## Deploy on Vercel
+### Detalhes de Implementação Relevantes
+- **Busca**: `inventory` usa filtro `name contains` case-insensitive (opcional) por `userId`.
+- **Paginação**: cálculo de `totalPages` e `skip/take` em Prisma, com componente `pagination` para navegar.
+- **Estoque baixo**:
+  - Se `lowStockAt` definido: estoque baixo quando `quantity <= lowStockAt`.
+  - Se não definido: usa limiar padrão (ex.: destaque informativo e regras de cor no dashboard).
+- **Valor total**: soma de `price × quantity` para todos os produtos do usuário.
+- **Série semanal**: janela de 12 semanas, agrupando criações por semana com `date-fns`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Componentes
+- `Sidebar.tsx`: navegação com realce de rota atual e `UserButton` do Stack.
+- `products-chart.tsx`: `AreaChart` com `ResponsiveContainer`, tooltip estilizado e eixos simples.
+- `DeleteButton.tsx`: encapsula envio de `id` para `deleteProduct`.
+- `pagination.tsx`: cria links de navegação considerando `q`, `pageSize` e página atual.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Notas de Performance e Segurança
+- **Prisma Client singleton** evita múltiplas conexões em dev (`lib/prisma.ts`).
+- **Parallelism**: consultas agregadas com `Promise.all` no dashboard.
+- **Escopo por usuário**: todas as consultas e mutações incluem `userId` do usuário autenticado.
+- **Validação de entrada**: `zod` em Server Actions para evitar dados inválidos.
+
+### Scripts
+```bash
+npm run dev  # desenvolvimento (turbopack)
+pnpm dev
+
+```
+
