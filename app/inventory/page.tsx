@@ -40,7 +40,7 @@ export default async function InventoryPage({
     <div className="min-h-screen">
       <Sidebar currentPath="/inventory" />
 
-      <main className="ml-60 p-6 text-gray-900">
+      <main className="md:mx-0 xl:ml-60 p-3 lg:p-6 text-gray-800 max-lg:w-full">
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
@@ -51,7 +51,7 @@ export default async function InventoryPage({
         </div>
 
         {items.length === 0 ? (
-          <div className="text-center p-25">
+          <div className="text-center py-6 px-3 md:p-25">
             {/* Verifica se há termo de pesquisa */}
             {q ? (
               // Mensagem quando a pesquisa não encontra resultados
@@ -96,25 +96,28 @@ export default async function InventoryPage({
             <form
               action="/inventory"
               method="GET"
-              className="bg-gray-50 w-full p-6 flex items-center gap-4 rounded-lg shadow-md">
+              className="bg-gray-50 w-full p-3 md:p-6 flex max-md:flex-col items-center max-md:items-start gap-4 rounded-lg shadow-md">
               <input
                 name="q"
                 placeholder="Buscar produtos..."
+                required
                 defaultValue={q || ""}
-                className="bg-white border border-gray-400 flex-1 px-4 py-2 rounded-lg focus:border-transparent focus:outline-purple-500"
+                className="bg-white border border-gray-400 flex-1 w-full px-4 py-2 rounded-lg focus:border-transparent focus:outline-purple-500"
               />
-              <button className="bg-purple-600 hover:bg-purple-700 px-3 py-2 rounded-lg text-white cursor-pointer transition-colors">
-                Buscar
-              </button>
-              {/* Botão para limpar pesquisa quando há termo */}
-              {q && (
-                <Link
-                  href="/inventory"
-                  className="bg-gray-500 hover:bg-gray-600 px-3 py-2 rounded-lg text-white cursor-pointer transition-colors"
-                >
-                  Limpar
-                </Link>
-              )}
+              <div className="flex items-center space-x-4">
+                <button className="bg-purple-600 hover:bg-purple-700 px-3 py-2 rounded-lg text-white cursor-pointer transition-colors">
+                  Buscar
+                </button>
+                {/* Botão para limpar pesquisa quando há termo */}
+                {q && (
+                  <Link
+                    href="/inventory"
+                    className="bg-gray-500 hover:bg-gray-600 px-3 py-2 rounded-lg text-white cursor-pointer transition-colors"
+                  >
+                    Limpar
+                  </Link>
+                )}
+              </div>
             </form>
 
             {/* Resultados da pesquisa */}
@@ -130,12 +133,12 @@ export default async function InventoryPage({
               <table className="w-full overflow-x-auto">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Name</th>
+                    <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Nome</th>
                     <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">SKU</th>
-                    <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Price</th>
-                    <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Quantity</th>
-                    <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Low Stock At</th>
-                    <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Preço</th>
+                    <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Quantidade</th>
+                    <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">MIN Estoque</th>
+                    <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Ação</th>
                   </tr>
                 </thead>
 

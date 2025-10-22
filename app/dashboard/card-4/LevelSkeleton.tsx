@@ -2,7 +2,7 @@
 
 export default function LevelSkeleton() {
     return (
-        <div className="niveis h-full bg-gray-50 p-6 border-t border-gray-200 rounded-xl shadow-md lg:w-[92%]">
+        <div className="niveis h-full bg-gray-50 p-6 border-t border-gray-200 rounded-xl shadow-md">
             <div className="flex items-center justify-between mb-6">
                 <div className="h-6 w-32 bg-gray-300 rounded animate-pulse"></div>
             </div>

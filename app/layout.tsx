@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body
-        className={`bg-gradient-to-br from-white to-violet-50/80 overflow-x-hidden ${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`container bg-gradient-to-br from-white to-violet-50/80 ${geistSans.variable} ${geistMono.variable} antialiased`}
       ><StackProvider app={stackClientApp}><StackTheme>
         {children}
       </StackTheme></StackProvider></body>

@@ -50,7 +50,7 @@ export default function Pagination({ currentPage, totalpages, baseUrl, searchPar
             <Link
                 href={getPageUrl(currentPage - 1)}
                 aria-disabled={currentPage <= 1}
-                className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg ${currentPage <= 1 ? "text-gray-400 hidden bg-gray-100 focus:outline-0" : "text-gray-700 hover:bg-gray-100 bg-white border border-gray-200 focus:outline-purple-600"}`}
+                className={`hidden lg:flex items-center px-3 py-2 text-sm font-medium rounded-lg ${currentPage <= 1 ? "text-gray-400 hidden bg-gray-100 focus:outline-0" : "text-gray-700 hover:bg-gray-100 bg-white border border-gray-200 focus:outline-purple-600"}`}
             >
                 <LuChevronLeft size={18} /> Voltar
             </Link>
@@ -77,7 +77,7 @@ export default function Pagination({ currentPage, totalpages, baseUrl, searchPar
             <Link
                 href={getPageUrl(currentPage + 1)}
                 aria-disabled={currentPage >= totalpages}
-                className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg ${currentPage >= totalpages ? " text-gray-400 hidden bg-gray-100" : "text-gray-700 hover:bg-gray-100 bg-white border border-gray-200 focus:outline-purple-600"}`}
+                className={`hidden lg:flex items-center px-3 py-2 text-sm font-medium rounded-lg ${currentPage >= totalpages ? " text-gray-400 hidden bg-gray-100" : "text-gray-700 hover:bg-gray-100 bg-white border border-gray-200 focus:outline-purple-600"}`}
             >
                 Proxímo
                 <LuChevronRight size={18} />

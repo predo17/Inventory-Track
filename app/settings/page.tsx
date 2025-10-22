@@ -10,7 +10,7 @@ export default async function SettingsPage() {
         <div className="min-h-screen">
             <Sidebar currentPath="/settings" />
 
-            <main className="ml-60 p-6 text-gray-800">
+            <main className="md:mx-0 xl:ml-60 p-3 lg:p-6 text-gray-800 max-lg:w-full">
                 <div className="mb-8">
                     <div className="flex items-center justify-between">
                         <div>

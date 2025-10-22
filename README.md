@@ -93,6 +93,16 @@ model Product {
 
 ### Scripts
 ```bash
+# Clone o repositório
+git clone https://github.com/predo17/Inventory-Track.git
+
+# Acesse a pasta do projeto
+cd Inventory-Track
+
+# Instale as dependências
+npm i
+
+# Inicie o projeto
 npm run dev  # desenvolvimento (turbopack)
 pnpm dev
 

@@ -79,7 +79,8 @@ export default async function DashboardPage() {
     <div className="container min-h-screen ">
       <Sidebar currentPath="/dashboard" />
 
-      <main className="ml-60 p-6 text-gray-800">
+
+      <main className="md:mx-0 xl:ml-60 p-3 lg:p-6 text-gray-800 ">
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
@@ -87,7 +88,7 @@ export default async function DashboardPage() {
               <p className="text-sm text-gray-500 ">bem-vindo de volta! aqui está uma visão geral do seu inventário.</p>
             </div>
           </div>
-          <div className="relative">
+          <div className="relative w-full">
             <div className="grid-layout mt-6">
               {/* Métricas */}
               <div className="metrica">
@@ -205,14 +206,15 @@ export default async function DashboardPage() {
                           </div>
                         </div>
                       ) : (
-                        // Eu não queria fazer isso, mas o maldito do *s* me perturbava nos meus sonhos.
-                        lowStock === 1 ? (
-                          <div className="flex items-center gap-2 text-3xl font-bold text-gray-800 mb-1 ml-2">{lowStock} <span className="text-lg text-orange-600 font-medium">Produto</span></div>
-                        ) : (
-                          <div className="flex items-center gap-2 text-3xl font-bold text-gray-800 mb-1 ml-2">{lowStock} <span className="text-lg text-orange-600 font-medium">Produtos</span></div>
-                        )
+                        <div className="flex items-center gap-2 text-3xl font-bold text-gray-800 mb-1 ml-2">{lowStock} <span className="text-lg text-orange-600 font-medium">
+                          {lowStock === 1 ? (
+                            <span>Produto</span>
+                          ) : (
+                            <span>Produtos</span>
+                          )}
+                        </span>
+                        </div>
                       )}
-
                       <div>
                         {lowStock === 0 ? (
                           <div className="flex items-center">
@@ -278,7 +280,7 @@ export default async function DashboardPage() {
 
                   <div className="space-y-3">
                     {recent.map((product, key) => {
-                      const stockLevel = product.quantity === 0 ? 0 : 
+                      const stockLevel = product.quantity === 0 ? 0 :
                         product.lowStockAt ?
                           (product.quantity <= product.lowStockAt ? 1 : 2) : // 1 = Baixo, 2 = Normal (com lowStockAt)
                           (product.quantity <= 5 ? 1 : 2); // 1 = Baixo, 2 = Normal (sem o lowStockAt - usar 5 como padrão)
@@ -295,7 +297,7 @@ export default async function DashboardPage() {
 
                       return (
                         <div key={key} className="flex items-center justify-between p-3 rounded-lg bg-white drop-shadow group transition-transform duration-500 ease-in-out hover:shadow-md active:shadow-md">
-                          <div className="flex items-center space-x-3 ">
+                          <div className="flex items-center whitespace-nowrap space-x-3 ">
                             <div className={`w-3 h-3 rounded-full group-hover:animate-pulse ${bgColor[stockLevel]}`} />
                             <div>
                               <span className="text-sm font-medium">{product.name}</span>
@@ -304,7 +306,7 @@ export default async function DashboardPage() {
                               </span>
                             </div>
                           </div>
-                          <div className={`text-sm font-medium ${textColor[stockLevel]}`}>{product.quantity} unidades</div>
+                          <div className={`text-sm font-medium truncate ${textColor[stockLevel]}`}>{product.quantity} unidades</div>
                         </div>
                       )
                     })}
